@@ -1,0 +1,28 @@
+platform :ios, '15.0' # Support for iPadOS features
+prepare_react_native_project!
+
+target 'HellfireProximity' do
+  config = use_native_modules!
+
+  # Flags to enable the "New Architecture" features (TurboModules)
+  # This makes the Obj-C <-> JS bridge much faster for window dragging
+  use_react_native!(
+    :path => "../node_modules/react-native",
+    :hermes_enabled => true,
+    :fabric_enabled => true,
+  )
+
+  target 'HellfireProximityTests' do
+    inherit! :complete
+  end
+
+  post_install do |installer|
+    # This block ensures that we don't use Swift-only build settings
+    react_native_post_install(installer)
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['ENABLE_BITCODE'] = 'NO'
+      end
+    end
+  end
+end

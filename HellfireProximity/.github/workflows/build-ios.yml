@@ -1,0 +1,59 @@
+name: Hellfire Proximity CI
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install JavaScript Dependencies
+        run: npm install
+
+      - name: Cache Pods
+        uses: actions/cache@v3
+        with:
+          path: ios/Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
+      - name: Install CocoaPods
+        run: |
+          cd ios
+          pod install
+          cd ..
+
+      - name: Build Archive
+        run: |
+          xcodebuild -workspace ios/HellfireProximity.xcworkspace \
+                     -scheme HellfireProximity \
+                     -configuration Release \
+                     -sdk iphoneos \
+                     -derivedDataPath build \
+                     CODE_SIGNING_ALLOWED=NO \
+                     CODE_SIGNING_REQUIRED=NO \
+                     AD_HOC_CODE_SIGNING_ALLOWED=YES \
+                     clean archive -archivePath build/HellfireProximity.xcarchive
+
+      - name: Package IPA
+        run: |
+          mkdir -p Payload
+          cp -r build/HellfireProximity.xcarchive/Products/Applications/HellfireProximity.app Payload/
+          zip -r HellfireProximity.ipa Payload
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Hellfire-Proximity-Build
+          path: HellfireProximity.ipa

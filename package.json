@@ -1,0 +1,25 @@
+{
+  "name": "hellfire-proximity",
+  "version": "1.0.0",
+  "description": "a Samsung DeX like experience for iOS. It allows the user to run Linux apps in a LENV (Linux Environment), you must be wondering why shouldn’t I just use a Linux machine with JIT, well Hellfire Proximity uses React Native and Objective-C to accomplish it’s goal the LENV only has to focus on the app/game only that means more performance for the app.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LukeScarletTrial/Hellfire-Proximity.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/LukeScarletTrial/Hellfire-Proximity/issues"
+  },
+  "homepage": "https://github.com/LukeScarletTrial/Hellfire-Proximity#readme",
+  "dependencies": {
+    "react": "^19.2.5",
+    "react-native": "^0.85.1"
+  }
+}
